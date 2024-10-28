@@ -39,13 +39,13 @@ The application is deployed on Azure and can be accessed at: [Chatly on Azure](h
 
 Here are some screenshots showing Chatly in action:
 
-(Images/4.png)
+![Image 1](Images/4.png)
 
-(Images/5.png)
+![Image 2](Images/5.png)
 
-(Images/6.png)
+![Image 3](Images/6.png)
 
-(Images/7.png)
+![Image 4](Images/7.png)
 
 ## Issues and Solutions
 
