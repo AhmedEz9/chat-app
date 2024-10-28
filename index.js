@@ -2,12 +2,19 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 
+// Create an Express application
 const app = express();
+
+// Create an HTTP server and attach it to the Express app
 const server = http.createServer(app);
+
+// Create a new instance of Socket.IO and attach it to the server
 const io = new Server(server);
 
+// Serve static files from the "public" folder
 app.use(express.static('public'));
 
+// Handle new socket connections
 io.on('connection', (socket) => {
     console.log('A user connected');
 
@@ -22,11 +29,14 @@ io.on('connection', (socket) => {
         io.to(room).emit('chat message', { nickname, message });
     });
 
+    // Handle user disconnection
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });
 });
 
-server.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+// Use the port provided by Azure or default to 3000 for local development
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
