@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        /* Basic reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body styling */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+
+        /* Chat container styling */
+        #chat-container {
+            width: 400px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Header */
+        h2 {
+            text-align: center;
+            color: #0073e6;
+            margin-bottom: 15px;
+        }
+
+        /* Input fields and button */
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #0073e6;
+            color: white;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        /* Messages area */
+        #messages {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Message styling */
+        .message {
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background-color: #e9f3ff;
+        }
+
+        /* Nickname style */
+        .nickname {
+            font-weight: bold;
+            color: #0073e6;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h2>Welcome to the Chat Room!</h2>
+        
+        <!-- Room, nickname, and message input fields -->
+        <input id="room" placeholder="Enter room name">
+        <input id="nickname" placeholder="Enter your nickname">
+        <input id="message" placeholder="Enter message">
+        <button onclick="sendMessage()">Send</button>
+        
+        <!-- Messages display area -->
+        <div id="messages"></div>
+    </div>
+
+    <!-- Load Socket.IO library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Function to send a message
+        function sendMessage() {
+            const room = document.getElementById('room').value;
+            const nickname = document.getElementById('nickname').value;
+            const message = document.getElementById('message').value;
+            if (room && nickname && message) {
+                socket.emit('join room', room); // Join specified room
+                socket.emit('chat message', { room, nickname, message }); // Send message to room
+            }
+        }
+
+        // Receive and display messages
+        socket.on('chat message', ({ nickname, message }) => {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.innerHTML = `<span class="nickname">${nickname}:</span> ${message}`;
+            document.getElementById('messages').appendChild(messageDiv);
+        });
+    </script>
+</body>
+</html>
